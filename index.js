@@ -1,5 +1,5 @@
 const electron = require('electron');
-const { app,BrowserWindow, Menu } = electron;
+const { app,BrowserWindow, Menu, ipcMain } = electron;
 
 let mainWindow;
 let addWindow;
@@ -7,6 +7,7 @@ let addWindow;
 app.on('ready', () => {
 	mainWindow = new BrowserWindow({});
 	mainWindow.loadURL('ftp://${__dirname}/main.html');
+	mainWindow.on('closed', () => app.quit());
 
 	const mainMenu = Menu.buildFromTemplate(menuTemplate);
 	Menu.setApplicationMenu(mainMenu); 
@@ -20,7 +21,14 @@ function createAddWindow(){
 		title : 'Add new todo'
 	});
 
+	addWindow.loadURL('ftp://${__dirname}/add.html');
+	addWindow.on('closed', () => addWindow = null);
 }
+
+ipcMain.on('todo:add', (event, todo) => {
+	mainWindow.webContents.send('todo:add', todo);
+	addWindow.close();
+});
 
 const menuTemplate = [{
 	label : 'File',
