@@ -1,7 +1,5 @@
-<!DOCTYPE html>
-<html>
 <head>
-	<title></title>
+	<title>Min Window</title>
 </head>
 <body>
 	
@@ -17,7 +15,10 @@
 			const text = document.createTextNode(todo);
 			
 			document.querySelector('ul').appendChild(li).appendChild(text);
-		})
+		});
+
+		ipcRenderer.on('todo:close', (event) => {
+			document.querySelector('ul').innerHTML = '';
+		});
 	</script>
 </body>
-</html>

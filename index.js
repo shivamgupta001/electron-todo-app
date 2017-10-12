@@ -36,6 +36,11 @@ const menuTemplate = [{
 		label : 'New Todo',
 		click(){ createAddWindow();}
 	},{
+		label : 'clear Todo',
+		click(){
+			mainWindow.webContents.send('todo:clear');
+		}
+	},{
 		label : 'Quit',
 		accelerator : process.platform === 'darwin' ? 'Command+Q': 'Alt+Q',			
 		click() {
@@ -47,3 +52,23 @@ const menuTemplate = [{
 if(process.platform === 'darwin'){
 	menuTemplate.unshift({});
 }
+
+if(process.env.NODE_ENV !== 'production'){
+	menuTemplate.push({
+		label : 'view',
+		submenu : [{
+			role: 'reload'
+		},{
+			label : 'Toggle Developer Tools',
+			accelerator : process.platform === 'darwin' ? 'Command+Q' : 'Alt+Q',
+			click(item, focusWindow){
+				focusWindow.toggleDevTools();
+			} 
+		}]
+	}) 
+}
+
+
+
+
+
